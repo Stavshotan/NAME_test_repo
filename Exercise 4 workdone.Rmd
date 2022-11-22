@@ -17,14 +17,12 @@ library(stats)
 library(corrplot)
 counts_file <- read.table("C:/Users/Avraham/Desktop/R code/ex4/rna-seq/SRP029880.raw_counts.tsv", sep = "\t")
 coldata_file <-read.table("C:/Users/Avraham/Desktop/R code/ex4/rna-seq/SRP029880.colData.tsv", sep = "\t")
+counts<- as.matrix(counts_file)
 ```
 
 1. Normalize the counts using the TPM approach. 
 
 ```{r}
-counts<- as.matrix(counts_file)
-
-##create geneLengths vector
 
 geneLengths <- as.vector(subset(counts, select = c(width)))
 
@@ -91,3 +89,7 @@ star aligment: thake rna seq and alin to genom. if we want to know how to use, w
 6. Create a repository and commit and push the answers of this exercise through Rtudio (Please upload the answers to the exercises also to Moodle).
 
 7. Insert the link to your Github account here.
+
+
+
+https://github.com/Stavshotan/NAME_test_repo.git
