@@ -1,0 +1,93 @@
+---
+title: "Exercise  4"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Exploring the count tables
+
+Here, import an example count table and do some exploration of the expression data. 
+
+```{r exSetup1, eval=FALSE}
+library(pheatmap)
+library(stats)
+library(corrplot)
+counts_file <- read.table("C:/Users/Avraham/Desktop/R code/ex4/rna-seq/SRP029880.raw_counts.tsv", sep = "\t")
+coldata_file <-read.table("C:/Users/Avraham/Desktop/R code/ex4/rna-seq/SRP029880.colData.tsv", sep = "\t")
+```
+
+1. Normalize the counts using the TPM approach. 
+
+```{r}
+counts<- as.matrix(counts_file)
+
+##create geneLengths vector
+
+geneLengths <- as.vector(subset(counts, select = c(width)))
+
+rpk<- apply(subset (counts, select = c(-width)), 2,
+              function(x) x/(geneLengths/1000))
+
+#normalize by the sample size using rpk values 
+tpm <- apply(rpk, 2, function(x) x / sum(as.numeric(x)) * 10^6)
+
+colSums(tpm)
+
+
+```
+
+2. Plot a heatmap of the top 500 most variable genes. Compare with the heatmap obtained using the 100 most variable genes. Hint : use var() function to compute the variance. 
+
+```{r}
+V <- apply(tpm, 1, var) #for every i , variance of every gene in cell, 1- go to rows 
+selectedGenes500 <- names(V[order(V, decreasing = T)][1:500])
+
+pheatmap500<-pheatmap::pheatmap(tpm[selectedGenes500,], scale = 'row', show_rownames = FALSE)
+
+
+
+selectedGenes100 <- names(V[order(V, decreasing = T)][1:100])
+
+
+
+pheatmap100<-pheatmap::pheatmap(tpm[selectedGenes100,], scale = 'row', show_rownames = FALSE)
+```
+
+
+3. Re-do the heatmaps setting the `scale` argument to `none`, and `column`. Compare the results with `scale = 'row'`.
+
+```{r}
+pheatmap500.2<-pheatmap::pheatmap(tpm[selectedGenes500,], scale = 'none', show_rownames = FALSE)
+pheatmap500.2<-pheatmap::pheatmap(tpm[selectedGenes500,], scale = 'column', show_rownames = FALSE)
+
+
+pheatmap100.2<-pheatmap::pheatmap(tpm[selectedGenes100,], scale = 'none', show_rownames = FALSE)
+pheatmap100.2<-pheatmap::pheatmap(tpm[selectedGenes100,], scale = 'column', show_rownames = FALSE)
+
+```
+
+
+4. Draw a correlation plot for the samples depicting the sample differences as 'ellipses', drawing only the upper end of the matrix, and order samples by hierarchical clustering results based on `average` linkage clustering method.
+```{r}
+
+correlationMatrix <- cor(tpm)
+
+corrplot::corrplot(correlationMatrix, method = 'ellipse', order = 'hclust', hclust.method = 'average', type = 'upper', addrect = 2, addCoef.col = 'white', number.cex = 0.7 )
+
+```
+
+
+
+### Git and Github
+me: github: dipository - a place that we can storage your code or data. dipository is a file. theres code. a way that we can share with others our code. everyone can contrebute and share the code and redirect to different changeches and see the differences. we can upload the code of paper and way of analising data. 
+star aligment: thake rna seq and alin to genom. if we want to know how to use, we can go to the github account of star
+
+
+5. Open Github account, and install git if it required as instructed in the following link: https://github.com/llendway/github_for_collaboration/blob/master/github_for_collaboration.md
+
+6. Create a repository and commit and push the answers of this exercise through Rtudio (Please upload the answers to the exercises also to Moodle).
+
+7. Insert the link to your Github account here.
